@@ -6,6 +6,7 @@ from utils.utils import create_directory
 from utils.utils import run_length_xps
 from utils.utils import generate_results_csv
 
+import os
 import utils
 import numpy as np
 import sys
