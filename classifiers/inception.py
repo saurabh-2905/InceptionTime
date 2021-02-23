@@ -11,7 +11,7 @@ from utils.utils import save_test_duration
 
 class Classifier_INCEPTION:
 
-    def __init__(self, output_directory, input_shape, nb_classes, verbose=False, build=True, batch_size=64,
+    def __init__(self, output_directory, input_shape, nb_classes, verbose=False, build=True, batch_size=32,
                  nb_filters=32, use_residual=True, use_bottleneck=True, depth=6, kernel_size=41, nb_epochs=1500):
 
         self.output_directory = output_directory
@@ -123,11 +123,11 @@ class Classifier_INCEPTION:
         if plot_test_acc:
 
             hist = self.model.fit(x_train, y_train, batch_size=mini_batch_size, epochs=self.nb_epochs,
-                                  verbose=self.verbose, validation_data=(x_val, y_val), callbacks=self.callbacks)
+                                  verbose=2 , validation_data=(x_val, y_val), callbacks=self.callbacks)   ##verbose=self.verbose
         else:
 
             hist = self.model.fit(x_train, y_train, batch_size=mini_batch_size, epochs=self.nb_epochs,
-                                  verbose=self.verbose, callbacks=self.callbacks)
+                                  verbose=2, callbacks=self.callbacks)
 
         duration = time.time() - start_time
 

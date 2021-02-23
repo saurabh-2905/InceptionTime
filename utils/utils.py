@@ -26,6 +26,18 @@ from sklearn.preprocessing import LabelEncoder
 def check_if_file_exits(file_name):
     return os.path.exists(file_name)
 
+def data_ms(feature_array, delimiter=','):
+    """
+    Calculate mean and standard deviation over whole dataset
+
+    list_of_imgpaths: list of paths to all images in dataset
+    """
+    data = feature_array
+    data_mean = np.mean(data)
+    data_std = np.std(data)
+
+    return data_mean, data_std 
+
 
 def readucr(filename, delimiter=','):
     data = np.loadtxt(filename, delimiter=delimiter)
@@ -101,6 +113,33 @@ def read_all_datasets(root_dir, archive_name):
                                            y_test.copy())
     elif archive_name == 'SITS':
         return read_sits_xps(root_dir)
+    elif archive_name == 'CTU':
+        for dataset_name in utils.constants.dataset_names_for_archive[archive_name]:
+            root_dir_dataset = root_dir + '/archives/' + archive_name + '/' + dataset_name + '/'
+
+            fhr_train = np.load(root_dir_dataset + 'fhr_train.npy')
+            utp_train = np.load(root_dir_dataset + 'utp_train.npy')
+            fhr_test = np.load(root_dir_dataset + 'fhr_test.npy')
+            utp_test = np.load(root_dir_dataset + 'utp_test.npy')
+
+            mean_fhr, std_fhr = data_ms(fhr_train)
+            mean_utp, std_utp = data_ms(utp_train)
+
+            fhr_train = (fhr_train - mean_fhr) / std_fhr
+            fhr_test = (fhr_test - mean_fhr) / std_fhr 
+            utp_train = (utp_train - mean_utp) / std_utp
+            utp_test = (utp_test - mean_utp) / std_utp 
+
+            x_train = [ [ [c,d] for c,d in zip(a,b)] for a,b in zip(fhr_train, utp_train)]
+            x_test = [ [ [c,d] for c,d in zip(a,b)] for a,b in zip(fhr_test, utp_test)]
+
+            x_train = np.array(x_train[:])  ### 3600 Take signal for initial 15 min
+            x_test = np.array(x_test[:])
+            y_train = np.load(root_dir_dataset + 'y_train.npy')
+            y_test = np.load(root_dir_dataset + 'y_test.npy')
+
+            datasets_dict[dataset_name] = (x_train.copy(), y_train.copy(), x_test.copy(),
+                                           y_test.copy())
     else:
         print('error in archive name')
         exit()

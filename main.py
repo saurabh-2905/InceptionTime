@@ -1,4 +1,4 @@
-from utils.constants import UNIVARIATE_ARCHIVE_NAMES as ARCHIVE_NAMES
+from utils.constants import MULTIVARIATE_ARCHIVE_NAMES as ARCHIVE_NAMES
 
 from utils.utils import read_all_datasets
 from utils.utils import transform_labels
@@ -7,6 +7,7 @@ from utils.utils import run_length_xps
 from utils.utils import generate_results_csv
 
 import os
+os.environ["CUDA_VISIBLE_DEVICES"]="0"
 import utils
 import numpy as np
 import sys
